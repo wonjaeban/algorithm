@@ -1,17 +1,19 @@
-def solution(number, k):
-    answer = [] # Stack
+def make_biggest_number(numbers, k):
+  number = []
+  for char in numbers:
+    if len(number) == 0:
+      number.append(char)
+      continue
+    elif char > number[-1] and k > 0:
+      while len(number) > 0 and char > number[-1] and k > 0:
+        number.pop()
+        k-=1
+    number.append(char)
+  number = number[:-k] if k > 0 else number
+  return ''.join(number)
     
-    for num in number:
-        if not answer:
-            answer.append(num)
-            continue
-        if k > 0:
-            while answer[-1] < num:
-                answer.pop()
-                k -= 1
-                if not answer or k <= 0:
-                    break
-        answer.append(num)
-        
-    answer = answer[:-k] if k > 0 else answer
-    return ''.join(answer)
+    
+
+
+def solution(number, k):
+    return make_biggest_number(number, k)
