@@ -1,16 +1,15 @@
 def solution(answers):
-  first_choices = [1, 2, 3, 4, 5]
-  second_choices = [2, 1, 2, 3, 2, 4, 2, 5]
-  third_choices = [3, 3, 1, 1, 2, 2, 4, 4, 5, 5]
-  answer_list = [0, 0, 0]
-  
-  for idx, answer in enumerate(answers):
-    if first_choices[idx % len(first_choices)] == answer:
-      answer_list[0] += 1
-    if second_choices[idx % len(second_choices)] == answer:
-      answer_list[1] += 1
-    if third_choices[idx % len(third_choices)] == answer:
-      answer_list[2] += 1
-
-  max_count = max(answer_list)
-  return [i + 1 for i, x in enumerate(answer_list) if x == max_count]
+    first_answers = [1, 2, 3, 4, 5]
+    second_answers = [2, 1, 2, 3, 2, 4, 2, 5]
+    third_answers = [3, 3, 1, 1, 2, 2, 4, 4, 5, 5]
+    count = [0, 0, 0]
+    for idx, answer in enumerate(answers):
+        if first_answers[(idx) % len(first_answers)] == answer:
+            count[0] += 1
+        if second_answers[(idx) % len(second_answers)] == answer:
+            count[1] += 1
+        if third_answers[(idx) % len(third_answers)] == answer:
+            count[2] += 1
+    
+    answer = [ x + 1 for x, y in enumerate(count) if y == max(count) ]
+    return answer
