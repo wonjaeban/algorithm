@@ -1,11 +1,12 @@
 def solution(brown, yellow):
-    answer = []
-    total = brown + yellow                  # a * b = total
-    for b in range(1,total+1):
-        if (total / b) % 1 == 0:            # total / b = a
-            a = total / b
-            if a >= b:                      # a >= b
-                if 2*a + 2*b == brown + 4:  # 2*a + 2*b = brown + 4 
-                    return [a,b]
-            
-    return answer
+    total = brown + yellow
+    width = 3
+    height= 3
+    while width <= total:
+        if total % width == 0:
+            if total - (2 * width) - (2 * (total // width)) + 4 == yellow:
+                width = max(width, total // width)
+                height = total // width
+                break
+        width += 1
+    return [width, height]
