@@ -1,14 +1,14 @@
 def solution(numbers, target):
     n = len(numbers)
-    answer = 0
+    count = 0
     def dfs(idx, result):
         if idx == n:
             if result == target:
-                nonlocal answer
-                answer += 1
+                nonlocal count
+                count += 1
             return
         else:
             dfs(idx+1, result+numbers[idx])
             dfs(idx+1, result-numbers[idx])
-    dfs(0,0)
-    return answer
+    dfs(0,0)   
+    return count
