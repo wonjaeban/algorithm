@@ -1,16 +1,19 @@
-def DFS(n, computers, index, visited):
+def dfs(index, visited, computers):
     visited[index] = 1
-    for connect in range(n):
-        if connect != index and computers[index][connect] == 1: #연결된 컴퓨터
-            if visited[connect] == False:
-                DFS(n, computers, connect, visited)
+    for idx, com in enumerate(computers[index]):
+        if idx == index or com == 0 or visited[idx]:
+            continue
+        dfs(idx, visited, computers)
+        
+    
 
 def solution(n, computers):
     answer = 0
     visited = [0 for i in range(n)]
-    for index in range(n):
-        if visited[index] == 0:
-            DFS(n, computers, index, visited)
-            answer += 1 #DFS로 최대한 컴퓨터들을 방문하고 빠져나오게 되면 그것이 하나의 네트워크.
+    for i in range(n):
+        if visited[i] == 1:
+            continue
+        dfs(i, visited, computers)
+        answer += 1
+        
     return answer
-
