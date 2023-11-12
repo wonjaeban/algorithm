@@ -1,42 +1,31 @@
 from collections import deque
 
-def solution(rectangle, characterX, characterY, itemX, itemY):
-    answer = 0
-#     두배로 늘려야하니깐
-    graph = [[-1 for _ in range(102)] for _ in range(102)]
-    visited = [[1 for _ in range(102)] for _ in range(102)]
-    direction = [(0, -1), (1, 0), (0, 1), (-1, 0)]
-    dq = deque()
+def bfs(graph, queue, tar_x, tar_y, visited):
+    dx = [-1, 1, 0, 0]
+    dy = [0, 0, -1, 1]
     
-    for r in rectangle:
-        x1, y1, x2, y2 = map(lambda x: x*2, r)
-        for i in range(x1, x2+1):
-            for j in range(y1, y2+1):
-                # x1, x2, y1, y2는 테두리이므로 제외하고 내부만 0으로 채움
-                if x1 < i < x2 and y1 < j < y2:
-                    graph[i][j] = 0
-                # 다른 직사각형의 내부가 아니면서 테두리일 때 1로 채움
-                elif graph[i][j] != 0:
-                    graph[i][j] = 1                
-    # 반복문을 마치면 테두리는 1, 내부는 0, 외부는 -1이 될 것이다   
-    
-    # 캐릭터와 아이템의 좌표도 2배씩 늘린다
-    cx, cy, ix, iy = 2*characterX, 2*characterY, 2*itemX, 2*itemY
-    
-    dq.append((cx, cy))
-    
-    while dq:
-        x, y = dq.popleft()
-        
-        if x == ix and y == iy:
-        	# 답을 반환할 때 2로 나누어 반환해준다
-            answer = visited[x][y] // 2
-            break   
-        for k in range(4):
-            nx, ny = x + direction[k][0], y + direction[k][1]
-            
-            if graph[nx][ny] == 1 and visited[nx][ny] == 1:
-                visited[nx][ny] += visited[x][y]
-                dq.append((nx, ny))
+    while queue:
+        cur_x, cur_y = queue.popleft()
+        if cur_x == tar_x and cur_y == tar_y:
+            return visited[cur_x][cur_y]  // 2
+        for i in range(4):
+            new_x = cur_x + dx[i]
+            new_y = cur_y + dy[i]
+            if graph[new_x][new_y] == 1 and visited[new_x][new_y] == 1:
+                visited[new_x][new_y] = visited[cur_x][cur_y] + 1
+                queue.append((new_x, new_y))
+    return visited[cur_x][cur_y]  // 2
 
-    return answer
+
+def solution(rectangle, characterX, characterY, itemX, itemY):
+    graph = [[-1 for i in range(102)] for i in range(102)]
+    visited = [[1 for i in range(102)] for i in range(102)]
+    for rec in rectangle:
+        for row in range(rec[0] * 2, rec[2] * 2 + 1):
+            for col in range(rec[1] * 2, rec[3] * 2 + 1):
+                if rec[0] * 2 < row < rec[2] * 2 and rec[1] * 2 < col < rec[3] * 2:
+                    graph[row][col] = 0
+                elif graph[row][col] != 0:
+                    graph[row][col] = 1
+    queue = deque([(characterX * 2, characterY * 2)])
+    return bfs(graph, queue, itemX * 2, itemY * 2, visited)
