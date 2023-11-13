@@ -20,24 +20,16 @@ def solution(tickets):
             if t[i][0] == now:
                 valid_idx = i
                 break
-            
-        # len(t) == 0이 아니었으므로 티켓이 남아있다는건데 나아갈 공항이 없다는 것은
-        # 유효한 루트가 아니라는 뜻이므로 실패의 의미에서 빈 리스트 리턴
-        if valid_idx == -1:
-            return []
-        
+
         # 출발지가 현재 공항인 티켓을 모두 순회하면서 DFS 돌림
         # 하나라도 먼저 완성된 루트가 나온다면 그걸 리턴해줌
         # 같은 출발지 기준, 도착지를 기준으로 오름차순 정렬했었기 때문에
         # 먼저 완성된 루트가 나온다면 그게 곧 알파벳 순서 상 가장 앞선 루트가 됨
         while t[valid_idx][0] == now:
             nxt_path = getPath(t[:valid_idx] + t[valid_idx + 1:], path + [t[valid_idx][1]])
-            
             if nxt_path != []:
                 return nxt_path
-            
             valid_idx += 1
-        
         return []
     
     return getPath(tickets, ["ICN"])
