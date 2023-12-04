@@ -1,44 +1,40 @@
 import sys
-from collections import deque
-input = sys.stdin.readline
 
-V = int(input())
-tree = [[] for _ in range(V+1)]
-# 2차원 리스트에 트리 저장(연결 그래프)
-for _ in range(V):
-    line = list(map(int, input().split()))
-    cnt_node = line[0]
-    idx = 1
-    while line[idx] != -1:
-        adj_node, adj_cost = line[idx], line[idx+1]
-        tree[cnt_node].append((adj_node, adj_cost))
-        idx += 2
+sys.setrecursionlimit(100000)
 
-visited = [-1]*(V+1)
-visited[1] = 0
 
-# 리턴 값 없음. visited에 모든 노드까지의 거리 저장
-def DFS(node, dist):
-    for v, d in tree[node]:
-        cal_dist = dist + d
-        if visited[v] == -1:
-            visited[v] = cal_dist
-            DFS(v, cal_dist)
-    return
-            
-DFS(1, 0)
-tmp = [0, 0]
-# 최대 거리에 있는 노드 찾기
-for i in range(1, len(visited)):
-    if visited[i] > tmp[1]:
-        tmp[1] = visited[i]
-        tmp[0] = i
+def dfs(graph, visited, cur):
+  for nxt in graph[cur[0]]:
+    if visited[nxt[0]] == -1:
+      visited[nxt[0]] = visited[cur[0]] + nxt[1]
+      dfs(graph, visited, nxt)
+  return
+    
 
-# 찾은 노드와, 찾은 노드에서 DFS 돌려 찾은 최대 거리 노드가 지름의 양 끝점
-# 이 논리의 증명은 따로 알아보자
-# 논리 : 임의의 노드에서 최대 거리에 있는 노드는 반드시 트리의 지름의 양 끝점 중 하나이다.
-visited = [-1]*(V+1)
-visited[tmp[0]] = 0
-DFS(tmp[0], 0)
-
-print(max(visited))
+def solution():
+  v = int(sys.stdin.readline())
+  graph = [[] for _ in range(v + 1)]
+  visited = [-1 for _ in range(v + 1)]
+  for _ in range(v):
+    new_line = list(map(int, sys.stdin.readline().split()))
+    for idx, element in enumerate(new_line):
+      if element == -1:
+        break
+      if idx % 2 == 0:
+        continue
+      if idx % 2 != 0:
+        graph[new_line[0]].append((new_line[idx], new_line[idx + 1]))
+  visited[1] = 0
+  dfs(graph, visited, (1, 0))
+  target = 0
+  max_value = 0
+  for idx, element in enumerate(visited):
+    if max_value < element:
+      max_value = element
+      target = idx
+  visited = [-1 for _ in range(v + 1)]
+  visited[target] = 0
+  dfs(graph, visited, (target, 0))
+  print(max(visited))
+    
+solution()
