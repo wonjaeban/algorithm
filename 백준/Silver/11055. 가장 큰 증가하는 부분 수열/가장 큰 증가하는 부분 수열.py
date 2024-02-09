@@ -1,13 +1,18 @@
-n=int(input())
-array=list(map(int, input().split()))
+import sys
 
-d=[1]*n
-d[0]=array[0]
-for i in range(1,n):
-  for j in range(i):
-    if array[j]<array[i]:
-      d[i]=max(d[i], d[j]+array[i])
-    else:
-      d[i]=max(d[i], array[i])
+def solution():
+  N = int(sys.stdin.readline())
+  numbers = list(map(int, sys.stdin.readline().split()))
+  dp = [1 for _ in range(N)]
+  dp[0] = numbers[0]
 
-print(max(d))
+  for i in range(1, N):
+    for j in range(i):
+      if numbers[i] > numbers[j]:
+        dp[i] = max(dp[i], dp[j] + numbers[i])
+      else:
+        dp[i] = max(dp[i], numbers[i])
+  
+  print(max(dp))
+    
+solution()
