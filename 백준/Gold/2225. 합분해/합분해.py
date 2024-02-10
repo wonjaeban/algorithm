@@ -1,7 +1,18 @@
-n, k = map(int,input().split())
-dp = [[0] * (k+1) for _ in range(n+1)]
-dp[0][0] = 1
-for i in range(0, n+1):
-    for j in range(1, k+1):
-            dp[i][j] = dp[i-1][j] + dp[i][j-1]
-print(dp[n][k] % 1000000000)
+import sys
+
+def solution():
+  N, K = map(int, sys.stdin.readline().split())
+  dp = [[1 for _ in range(K + 1)] for _ in range(N + 1)]
+  dp[0][0] = 0
+  for i in range(1, N + 1):
+    for j in range(1, K + 1):
+      if i == 1:
+        dp[i][j] = j
+      elif j == 1:
+        dp[i][j] = 1
+      else:
+        dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+  print(dp[N][K] % 1000000000)
+
+
+solution()
