@@ -1,31 +1,23 @@
-function countUpAndDown(target) {
-    const down = target.charCodeAt(0) - 'A'.charCodeAt(0);
-    const up = 'Z'.charCodeAt(0) - target.charCodeAt(0) + 1;
-    return down < up ? down : up;
-}
-
 
 function solution(name) {
-      let answer = 0;
-      let min = name.length - 1;
+  let answer = 0;
+  let min_move = name.length - 1;
 
-      for (let i = 0; i < name.length; i++) {
-        let currentAlPhabet = name[i];
-        answer += countUpAndDown(currentAlPhabet);
+  [...name].map((n, i) => {
+    answer += Math.min(n.charCodeAt() - 65, 91 - n.charCodeAt());
+    let idx = i + 1;
 
-        let nextIndex = i + 1;
+    // 연속되는 A의 개수 count
+    while (idx < name.length && name[idx] === 'A') {
+      idx++;
+    }
 
-          // A가 안나오는 인덱스 지점 찾기
-        while (nextIndex < name.length && name[nextIndex] === 'A') {
-          nextIndex += 1;
-        }
+    min_move = Math.min(
+      min_move,
+      i * 2 + name.length - idx,
+      i + 2 * (name.length - idx),
+    );
+  });
 
-        min = Math.min(
-          min,
-          i * 2 + name.length - nextIndex, 
-          i + (name.length - nextIndex) * 2 
-        );
-      }
-      answer += min;
-      return answer;
+  return answer + min_move;
 }
