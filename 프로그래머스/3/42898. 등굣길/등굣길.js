@@ -1,27 +1,41 @@
 function solution(m, n, puddles) {
-  // m이 가로의 길이, n이 세로의 길이.
-  const matrix = Array.from({ length: n }).map((v) =>
-    Array.from({ length: m }).fill(1)
-  );
+    const graph = Array.from({length: n}, () => Array(m).fill(-1));
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < m; j++) {
+            if (i === 0 || j === 0) {
+                graph[i][j] = 1
+            }
+        }
+    }
+    for (let puddle of puddles) {
+        const x = puddle[0] - 1;
+        const y = puddle[1] - 1;
+        graph[y][x] = 0;
 
-  // 물 웅덩이는 0으로 센다.
-  puddles.forEach(([m, n]) => {
-    matrix[n - 1][m - 1] = 0;
-  });
+        // 첫 번째 행에 웅덩이가 있는 경우 그 이후 경로 차단
+        if (y === 0) {
+            for (let j = x; j < m; j++) {
+                graph[0][j] = 0;
+            }
+        }
 
-  // 해당 칸의 값이 0이라면 물 웅덩이를 지나는 경로이므로 값을 0으로 설정
-  // 첫 행 첫 열일 경우 값을 1로 초기화
-  // 이 외의 첫 행일 경우 위에서 오는 경로는 없으므로 왼쪽에서 오는 경로만 센다.
-  // 첫 열일 경우 왼쪽에서 오는 경로는 없으므로 위에서 오는 경로만 센다.
-  // 나머지는 위에서 오는 경로의 개수와 왼쪽에서 오는 경로의 개수를 더해준다.
-  const result = matrix.reduce((prev, row, i) => {
-    return row.reduce((a, v, j) => {
-      a[j] =
-        (v === 0 ? v : i === 0 ? a[j - 1] ?? 1 : prev[j] + (a[j - 1] ?? 0)) %
-        1000000007;
-      return a;
-    }, []);
-  }, []);
-
-  return result[m - 1];
+        // 첫 번째 열에 웅덩이가 있는 경우 그 이후 경로 차단
+        if (x === 0) {
+            for (let i = y; i < n; i++) {
+                graph[i][0] = 0;
+            }
+        }
+    }
+    
+    for (let i = 1; i < n; i++) {
+        for (let j = 1; j < m; j++) {
+            if (graph[i][j] === 0) {
+                continue;
+            }
+            graph[i][j] = graph[i - 1][j] + graph[i][j - 1];
+            
+            graph[i][j] %= 1000000007;
+        }
+    }
+    return graph[n - 1][m - 1];
 }
