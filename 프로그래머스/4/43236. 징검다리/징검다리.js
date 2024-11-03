@@ -1,26 +1,26 @@
 function solution(distance, rocks, n) {
     const newRocks = [0, ...rocks, distance];
-    newRocks.sort((a, b) => a - b);
-    
-    let left = 0;
-    let right = distance
-    
-    while(left <= right) {
-        let mid = Math.floor((right + left) / 2);
+    newRocks.sort((a, b) =>  a - b);
+    let start = 0;
+    let end = distance;
+    while (start <= end) {
+        let mid = Math.floor((end + start) / 2);
+        let idx = 0;
         let count = 0;
-        let current = 0;
-        for (let i = 1; i < newRocks.length; i++) {
-            if (mid > newRocks[i] - newRocks[current]) {
-                count += 1;
+        let j = idx + 1;
+        while (j < newRocks.length) {
+            if (newRocks[j] - newRocks[idx] < mid) {
+                count++;
             } else {
-                current = i;
+                idx = j;
             }
+            j++;
         }
         if (count > n) {
-            right = mid - 1;
+            end = mid - 1;
         } else {
-            left = mid + 1;
-        } 
+            start = mid + 1;
+        }
     }
-    return right;
+    return Math.floor((end + start) / 2);
 }
